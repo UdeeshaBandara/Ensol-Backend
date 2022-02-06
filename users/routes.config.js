@@ -1,6 +1,6 @@
 const UsersController = require('./controllers/users.controller');
-const PermissionMiddleware = require('../common/middlewares/auth.permission.middleware');
-const ValidationMiddleware = require('../common/middlewares/auth.validation.middleware');
+const VerifyUserMiddleware = require('../middlewares/verify.user.middleware');
+const ValidationMiddleware = require('../middlewares/auth.validation.middleware');
 const config = require('../config/env.config');
 
 const ADMIN = config.permissionLevels.ADMIN;
@@ -13,27 +13,17 @@ exports.routesConfig = function (app) {
     ]);
     app.get('/users', [
         ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(PAID),
-        UsersController.list
+        UsersController.get
     ]);
-    app.get('/users/:userId', [
+
+    app.put('/users/:userId', [
         ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(FREE),
-        PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
-        UsersController.getById
-    ]);
-    app.patch('/users/:userId', [
-        ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(FREE),
-        PermissionMiddleware.onlySameUserOrAdminCanDoThisAction,
+        VerifyUserMiddleware.isPasswordAndUserMatch,
         UsersController.patchById
     ]);
-    app.delete('/users/:userId', [
-        ValidationMiddleware.validJWTNeeded,
-        PermissionMiddleware.minimumPermissionLevelRequired(ADMIN),
-        UsersController.removeById
-    ]);
+
     app.post('/users/notification', [
+        ValidationMiddleware.validJWTNeeded,
         UsersController.sendNotification
     ]);
 };

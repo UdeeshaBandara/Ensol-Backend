@@ -1,4 +1,5 @@
 const FCM = require('fcm-node')
+const user = require("../models/models.index").user;
 
 const serverKey = require('../private_key.json') //put the generated private key path here
 

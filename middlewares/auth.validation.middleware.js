@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken'),
-    secret = require('../../config/env.config.js').jwt_secret,
+    secret = require('../config/env.config.js').jwt_secret,
     crypto = require('crypto');
 
 exports.verifyRefreshBodyField = (req, res, next) => {
@@ -28,16 +28,16 @@ exports.validJWTNeeded = (req, res, next) => {
         try {
             let authorization = req.headers['authorization'].split(' ');
             if (authorization[0] !== 'Bearer') {
-                return res.status(401).send();
+                return res.status(401).send({status : false,"message": "Unauthorized"});
             } else {
                 req.jwt = jwt.verify(authorization[1], secret);
                 return next();
             }
 
         } catch (err) {
-            return res.status(403).send();
+            return res.status(401).send({status : false,"message": "Unauthorized"});
         }
     } else {
-        return res.status(401).send();
+        return res.status(401).send({status : false,"message": "Unauthorized"});
     }
 };
