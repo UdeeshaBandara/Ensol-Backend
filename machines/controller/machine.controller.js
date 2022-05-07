@@ -1,39 +1,35 @@
-const user = require("../../models/models.index").user;
+const machine = require("../../models/models.index").machine;
 
-const crypto = require('crypto');
-const notification = require('../../push_notifications/send');
 
 exports.insert = (req, res) => {
 
-    let salt = crypto.randomBytes(16).toString('base64');
-    let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64");
-    req.body.password = salt + "$" + hash;
 
-
-    user.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName, email: req.body.email,
-        password: req.body.password, fcm: req.body.fcm
+    machine.create({
+        serialNumber: req.body.serialNumber,
+        machineType: req.body.machineType,
+        availableQty: req.body.availableQty,
+        rentPrice: req.body.rentPrice,
+        status: req.body.status
     }).then((result) => {
         res.status(201).send({status: true, data: result});
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to save user"});
-
-
+        console.log(err.message)
+        res.status(200).send({status: false, data: "Failed to save machine"});
     });
 
 };
 
 exports.get = (req, res) => {
 
-    user.findAll({
+    machine.findOne({
         where: {
-            id: req.jwt.userId
+            id: req.params.id
         }
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to get user"});
+        res.status(200).send({status: false, data: "Failed to get machine"});
+
 
     });
 
@@ -49,10 +45,14 @@ exports.patchById = (req, res) => {
     }).then((result) => {
         console.log(result);
 
-        res.status(200).send({status: true,data:result});
+        res.status(200).send({status: true});
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to update user"});
+        err.errors.map(e =>
+            res.status(200).send({
+                status: false,
+                message: e.message
+            }));
 
 
     });

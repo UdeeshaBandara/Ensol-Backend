@@ -1,40 +1,51 @@
 module.exports = (sequelize, Sequelize,DataTypes) => {
 
-    const User = sequelize.define("users", {
-        firstName: {
+    const Machine = sequelize.define("machine", {
+        serialNumber: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: ""
         },
-        lastName: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: ""
-
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: "",
-            unique: true,
-            isEmail: true,
-
-        },
-        password: {
+        machineType: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: ""
 
         },
-        fcm: {
+        rentPrice: {
+            type: DataTypes.FLOAT,
+            allowNull: false,
+            defaultValue: 0.0
+
+
+        },
+        availableQty: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 0
+
+        },
+        description: {
             type: DataTypes.STRING,
             allowNull: false,
             defaultValue: ""
+
+        },
+        images: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: ""
+
+        },
+        status: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            defaultValue: 1
 
         }
     });
 
-    return User;
+    return Machine;
 
 
 }
