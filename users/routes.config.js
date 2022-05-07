@@ -6,6 +6,7 @@ const config = require('../config/env.config');
 
 exports.routesConfig = function (app) {
     app.post('/users', [
+        VerifyUserMiddleware.checkEmailPhoneNumber,
         UsersController.insert
     ]);
     app.get('/user', [

@@ -13,4 +13,16 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         MachineController.get
     ]);
+    app.get('/machine', [
+        ValidationMiddleware.validJWTNeeded,
+        MachineController.getAll
+    ]);
+    app.put('/machine/:id', [
+        ValidationMiddleware.validJWTNeeded,
+        MachineController.patchById
+    ]);
+    app.delete('/machine/:id', [
+        ValidationMiddleware.validJWTNeeded,
+        MachineController.disableById
+    ]);
 };

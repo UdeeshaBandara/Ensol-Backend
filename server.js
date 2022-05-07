@@ -24,7 +24,8 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.json());
-db.sequelize.sync({alter:true});
+db.sequelize.sync( );
+// db.sequelize.sync({alter:true});
 AuthorizationRouter.routesConfig(app);
 UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);

@@ -9,7 +9,9 @@ exports.insert = (req, res) => {
         machineType: req.body.machineType,
         availableQty: req.body.availableQty,
         rentPrice: req.body.rentPrice,
-        status: req.body.status
+        status: req.body.status,
+        images: req.body.images,
+        description: req.body.description
     }).then((result) => {
         res.status(201).send({status: true, data: result});
     }).catch(err => {
@@ -23,12 +25,32 @@ exports.get = (req, res) => {
 
     machine.findOne({
         where: {
-            id: req.params.id
+            id: req.params.id,
+            status : 1
         }
     }).then((result) => {
-        res.status(200).send({status: true, data: result});
+        if (result == null) {
+
+            res.status(200).send({status: false, data: "Invalid machine id"});
+        } else {
+            res.status(200).send({status: true, data: result});
+        }
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to get machine"});
+
+
+    });
+
+};
+exports.getAll = (req, res) => {
+
+    machine.findAll({   where: {
+
+            status : 1
+        }}).then((result) => {
+        res.status(200).send({status: true, data: result});
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to retrieve machine"});
 
 
     });
@@ -38,36 +60,52 @@ exports.get = (req, res) => {
 exports.patchById = (req, res) => {
 
 
-    user.update(req.body , {
+    machine.update(req.body, {
         where: {
-            id: req.jwt.userId
+            id: req.params.id,
+            status : 1
         }
     }).then((result) => {
-        console.log(result);
 
-        res.status(200).send({status: true});
+
+        if(!result[0])
+
+            res.status(200).send({status: false,data:"Failed to update machine details"});
+        else
+            res.status(200).send({status: true,data:"Update successfully"});
 
     }).catch(err => {
-        err.errors.map(e =>
-            res.status(200).send({
-                status: false,
-                message: e.message
-            }));
+        res.status(200).send({status: false, data: "Failed to update machine"});
 
 
     });
 
 
-    // if (req.body.password) {
-    //     let salt = crypto.randomBytes(16).toString('base64');
-    //     let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64");
-    //     req.body.password = salt + "$" + hash;
-    // }
-    //
-    // UserModel.patchUser(req.params.userId, req.body)
-    //     .then((result) => {
-    //         res.status(204).send({});
-    //     });
+};
+
+exports.disableById = (req, res) => {
+
+
+    machine.update({ status: 0 }, {
+        where: {
+            id: req.params.id
+        }
+    }).then((result) => {
+
+
+        if(!result[0])
+
+            res.status(200).send({status: false,data:"Failed to delete machine details"});
+        else
+            res.status(200).send({status: true,data:"Delete successfully"});
+
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to delete machine"});
+
+
+
+    });
+
 
 };
 

@@ -11,13 +11,16 @@ exports.insert = (req, res) => {
 
 
     user.create({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName, email: req.body.email,
-        password: req.body.password, fcm: req.body.fcm
+        name: req.body.name,
+        address: req.body.address,
+        email: req.body.email,
+        password: req.body.password,
+        fcm: req.body.fcm,
+        telephone: req.body.telephone
     }).then((result) => {
         res.status(201).send({status: true, data: result});
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to save user"});
+        res.status(200).send({status: false, data: "Failed to save user " + err.message});
 
 
     });

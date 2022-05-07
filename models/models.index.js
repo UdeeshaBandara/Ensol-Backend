@@ -15,7 +15,7 @@ db.sequelize = sequelize;
 
 
 
-db.user = require("./buyer.model.js")(sequelize, Sequelize,DataTypes);
+db.user = require("./user.model.js")(sequelize, Sequelize,DataTypes);
 db.machine = require("./machine.model.js")(sequelize, Sequelize,DataTypes);
 db.repair = require("./repair.model.js")(sequelize, Sequelize,DataTypes);
 db.order = require("./order.model.js")(sequelize, Sequelize,DataTypes);

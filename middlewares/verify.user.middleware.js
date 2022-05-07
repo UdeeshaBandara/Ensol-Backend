@@ -1,5 +1,6 @@
 const user = require("../models/models.index").user;
 const crypto = require('crypto');
+const { Op } = require("sequelize");
 
 exports.hasAuthValidFields = (req, res, next) => {
     let errors = [];
@@ -50,6 +51,39 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
             } else {
                 return res.status(200).send({ status : false,message: 'Invalid e-mail or password'});
             }
+        }
+
+    });
+
+};
+exports.checkEmailPhoneNumber = (req, res, next) => {
+
+    if (!req.body.email) {
+        return res.status(200).send({ status : false,message: 'Invalid e-mail'});
+    }
+    if (!req.body.telephone) {
+        return res.status(200).send({ status : false,message: 'Invalid telephone number'});
+    }
+    if (!req.body.fcm){
+        return res.status(200).send({ status : false,message: 'Invalid FCM token'});
+    }
+
+    user.findAll({
+        where: {
+            [Op.or]:[
+                {email: req.body.email},
+                {telephone : req.body.telephone}
+            ]
+        }
+    }).then((result) => {
+
+        if (result.length >= 1) {
+            res.status(200).send({ status : false,message: 'E-mail or password already exist'});
+        } else
+        {
+
+            return next();
+
         }
 
     });

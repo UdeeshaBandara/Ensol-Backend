@@ -23,7 +23,8 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
         telephone: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: 0,
+            unique: true
 
         },
         password: {
