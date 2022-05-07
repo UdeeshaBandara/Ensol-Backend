@@ -8,6 +8,10 @@ const express = require('express');
 
 exports.routesConfig = function (app) {
 
+    app.get('/', [
+
+        AuthorizationController.welcome
+    ]);
     app.post('/auth', [
         VerifyUserMiddleware.hasAuthValidFields,
         VerifyUserMiddleware.isPasswordAndUserMatch,

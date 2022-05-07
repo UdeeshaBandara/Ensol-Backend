@@ -15,14 +15,14 @@ exports.login = (req, res) => {
         let refresh_token = b.toString('base64');
 
 
-        user.update({fcm : req.body.fcm }, {
+        user.update({fcm: req.body.fcm}, {
             where: {
                 email: req.body.email
             }
         }).then((result) => {
             console.log(result);
 
-           res.status(200).send({status: true,accessToken: token, refreshToken: refresh_token});
+            res.status(200).send({status: true, accessToken: token, refreshToken: refresh_token});
 
         }).catch(err => {
             err.errors.map(e =>
@@ -33,7 +33,7 @@ exports.login = (req, res) => {
         });
 
     } catch (err) {
-        res.status(200).send({status: false,errors: err});
+        res.status(200).send({status: false, errors: err});
     }
 };
 
@@ -43,6 +43,14 @@ exports.refresh_token = (req, res) => {
         let token = jwt.sign(req.body, jwtSecret);
         res.status(201).send({id: token});
     } catch (err) {
-        res.status(200).send({status: false,errors: err});
+        res.status(200).send({status: false, errors: err});
+    }
+};
+exports.welcome = (req, res) => {
+    try {
+
+        res.status(200).send({"message": "Ensol up and running!!!"});
+    } catch (err) {
+        res.status(200).send({status: false, errors: err});
     }
 };
