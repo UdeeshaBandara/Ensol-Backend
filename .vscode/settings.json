@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/3194e123-4200-479b-8413-d7c2863e8d27/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/ensol",
+    "appService.deploySubpath": "push_notifications"
+}
