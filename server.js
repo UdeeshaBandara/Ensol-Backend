@@ -30,7 +30,7 @@ AuthorizationRouter.routesConfig(app);
 UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);
 
-var port_number = server.listen(process.env.PORT || 3000);
-app.listen(port_number, function () {
+
+app.listen(process.env.PORT || 3000, function () {
     console.log('app listening at port %s', config.port);
 });
