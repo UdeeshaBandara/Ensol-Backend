@@ -5,7 +5,7 @@ const config = require('../config/env.config');
 
 
 exports.routesConfig = function (app) {
-    app.post('/users', [
+    app.post('/user', [
         VerifyUserMiddleware.checkEmailPhoneNumber,
         UsersController.insert
     ]);
@@ -14,14 +14,14 @@ exports.routesConfig = function (app) {
         UsersController.get
     ]);
 
-    app.put('/users/:userId', [
+    app.put('/user/:userId', [
         ValidationMiddleware.validJWTNeeded,
         VerifyUserMiddleware.isPasswordAndUserMatch,
         UsersController.patchById
     ]);
 
-    app.post('/users/notification', [
+    app.get('/user/notification', [
         ValidationMiddleware.validJWTNeeded,
-        UsersController.sendNotification
+        UsersController.getNotification
     ]);
 };

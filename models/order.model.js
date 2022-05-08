@@ -7,24 +7,18 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             defaultValue: 0.0
         },
         orderStatus: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: ""
+            defaultValue: 1
 
         },
-        startDate: {
+      orderDate: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW
 
 
-        },
-        endDate: {
-            type: DataTypes.DATE,
-            allowNull: false,
-            defaultValue: DataTypes.NOW
-
-        },
+        }
 
     });
 

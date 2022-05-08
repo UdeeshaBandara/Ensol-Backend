@@ -17,12 +17,7 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
                 key: 'id'
             }
         },
-        quantity: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: ""
 
-        },
         contractEndDate: {
             type: DataTypes.DATE,
             allowNull: false,
@@ -30,10 +25,10 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
 
 
         },
-        qty: {
+        quantity: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: 1
 
         },
 

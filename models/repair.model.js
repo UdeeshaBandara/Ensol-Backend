@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             defaultValue: ""
         },
         status: {
-            type: DataTypes.STRING,
+            type: DataTypes.INTEGER,
             allowNull: false,
             defaultValue: 1
 

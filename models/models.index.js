@@ -24,6 +24,7 @@ db.orderMachines = require("./orderMachine.model.js")(sequelize, Sequelize,DataT
 
 //Table relationships
 db.user.hasMany(db.order);
+db.user.hasMany(db.notification);
 db.machine.hasMany(db.repair);
 db.order.hasMany(db.repair);
 db.order.belongsToMany(db.machine,{through:db.orderMachines});

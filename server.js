@@ -4,11 +4,11 @@ const db = require("./models/models.index");
 const express = require('express');
 const app = express();
 
-
-
 const AuthorizationRouter = require('./authorization/routes.config');
 const UsersRouter = require('./users/routes.config');
 const MachineRouter = require('./machines/machine.routes.config');
+const RepairRouter = require('./repairs/repair.routes.config');
+const OrderRouter = require('./orders/order.routes.config');
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -29,6 +29,8 @@ db.sequelize.sync( );
 AuthorizationRouter.routesConfig(app);
 UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);
+RepairRouter.routesConfig(app);
+OrderRouter.routesConfig(app);
 
 
 app.listen(process.env.PORT || 3000, function () {
