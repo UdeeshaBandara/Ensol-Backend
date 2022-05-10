@@ -9,13 +9,14 @@ const upload=multer({storage: multer.memoryStorage()});
 exports.routesConfig = function (app) {
     app.post('/machine', [
         ValidationMiddleware.validJWTNeeded,
+        upload.array('machinePhotos',5),
         MachineController.insert
     ]);
-    app.post('/machine/image', [
-        ValidationMiddleware.validJWTNeeded,
-        upload.single('file'),
-        MachineController.uploadImage
-    ]);
+    // app.post('/machine/image', [
+    //     ValidationMiddleware.validJWTNeeded,
+    //     upload.array('machinePhotos',5),
+    //     MachineController.uploadImage
+    // ]);
     app.get('/machine/:id', [
         ValidationMiddleware.validJWTNeeded,
         MachineController.get

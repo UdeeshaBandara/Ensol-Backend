@@ -40,7 +40,23 @@ UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);
 RepairRouter.routesConfig(app);
 OrderRouter.routesConfig(app);
- 
+
+// app.post('/uploadImage',upload.single('file'),async(req,res)=>{
+//     // const name = saltedMd5(req.file.originalname, 'SUPER-S@LT!')
+//     // const fileName = name + path.extname(req.file.originalname)
+//      await app.locals.bucket.file(req.file.originalname).createWriteStream().end(req.file.buffer)
+//
+//     // const bucket = gcs.Bucket(app.locals.bucket);
+//     const file = app.locals.bucket.file(req.file.originalname);
+//     return file.getSignedUrl({
+//         action: 'read',
+//         expires: '03-09-2491'
+//     }).then(signedUrls => {
+//         // signedUrls[0] contains the file's public URL
+//         res.send({'done':signedUrls[0],"other":signedUrls});
+//     });
+//
+// })
 
 app.listen(process.env.PORT || 3000, function () {
     console.log('app listening at port %s', config.port);

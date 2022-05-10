@@ -1,39 +1,61 @@
-
 const machine = require("../../models/models.index").machine;
 
 
-exports.insert = (req, res) => {
+exports.insert = async (req, res) => {
 
 
-    machine.create({
+    const savedMachine = await machine.create({
         serialNumber: req.body.serialNumber,
         machineType: req.body.machineType,
         availableQty: req.body.availableQty,
         rentPrice: req.body.rentPrice,
         status: req.body.status,
-        images: req.body.images,
         description: req.body.description
+    });
+
+    let fileUrls = [];
+    for (let i = 0; i < req.files.length; i++) {
+        await req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
+
+        const file = req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
+        let nice = await file.getSignedUrl({
+            action: 'read',
+            expires: '03-09-2491'
+        });
+
+       fileUrls.push(nice[0].toString());
+
+
+    }
+
+    machine.update({images: JSON.stringify(fileUrls).toString()}, {
+        where: {
+            id: savedMachine.id
+        }
     }).then((result) => {
-        res.status(201).send({status: true, data: result});
+
+
+        if (!result[0])
+
+            res.status(200).send({status: false, data: "Failed to save machine details"});
+        else
+            res.status(201).send({status: true, data: "Added successfully"});
+
     }).catch(err => {
-        console.log(err.message)
-        res.status(200).send({status: false, data: "Failed to save machine"});
+        res.status(200).send({status: false, data: "Failed to update machine"});
+
+
     });
 
 };
 
-exports.uploadImage = async  (req, res) => {
+async function  getUrlList()  {
 
 
-    await req.app.locals.bucket.file(req.file.originalname).createWriteStream().end(req.file.buffer)
 
-    const file = req.app.locals.bucket.file(req.file.originalname);
-    return file.getSignedUrl({
-        action: 'read',
-        expires: '03-09-2491'
-    }).then(signedUrls => {
-        res.send({'done':signedUrls[0],"other":signedUrls});
-    });
+}
+
+exports.uploadImage = async (req, res) => {
 
 
 };
@@ -44,7 +66,7 @@ exports.get = (req, res) => {
     machine.findOne({
         where: {
             id: req.params.id,
-            status : 1
+            status: 1
         }
     }).then((result) => {
         if (result == null) {
@@ -62,10 +84,12 @@ exports.get = (req, res) => {
 };
 exports.getAll = (req, res) => {
 
-    machine.findAll({   where: {
+    machine.findAll({
+        where: {
 
-            status : 1
-        }}).then((result) => {
+            status: 1
+        }
+    }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to retrieve machine"});
@@ -81,16 +105,16 @@ exports.patchById = (req, res) => {
     machine.update(req.body, {
         where: {
             id: req.params.id,
-            status : 1
+            status: 1
         }
     }).then((result) => {
 
 
-        if(!result[0])
+        if (!result[0])
 
-            res.status(200).send({status: false,data:"Failed to update machine details"});
+            res.status(200).send({status: false, data: "Failed to update machine details"});
         else
-            res.status(200).send({status: true,data:"Update successfully"});
+            res.status(200).send({status: true, data: "Update successfully"});
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to update machine"});
@@ -104,22 +128,21 @@ exports.patchById = (req, res) => {
 exports.disableById = (req, res) => {
 
 
-    machine.update({ status: 0 }, {
+    machine.update({status: 0}, {
         where: {
             id: req.params.id
         }
     }).then((result) => {
 
 
-        if(!result[0])
+        if (!result[0])
 
-            res.status(200).send({status: false,data:"Failed to delete machine details"});
+            res.status(200).send({status: false, data: "Failed to delete machine details"});
         else
-            res.status(200).send({status: true,data:"Delete successfully"});
+            res.status(200).send({status: true, data: "Delete successfully"});
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to delete machine"});
-
 
 
     });
