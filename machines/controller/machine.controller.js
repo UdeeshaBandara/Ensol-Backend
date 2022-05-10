@@ -1,3 +1,4 @@
+
 const machine = require("../../models/models.index").machine;
 
 
@@ -20,6 +21,23 @@ exports.insert = (req, res) => {
     });
 
 };
+
+exports.uploadImage = async  (req, res) => {
+
+
+    await req.app.locals.bucket.file(req.file.originalname).createWriteStream().end(req.file.buffer)
+
+    const file = req.app.locals.bucket.file(req.file.originalname);
+    return file.getSignedUrl({
+        action: 'read',
+        expires: '03-09-2491'
+    }).then(signedUrls => {
+        res.send({'done':signedUrls[0],"other":signedUrls});
+    });
+
+
+};
+
 
 exports.get = (req, res) => {
 

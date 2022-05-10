@@ -2,6 +2,14 @@ const config = require('./config/env.config.js');
 
 const db = require("./models/models.index");
 const express = require('express');
+const admin = require("firebase-admin")
+const serverKey = require('./private_key.json');
+
+admin.initializeApp({
+    credential: admin.credential.cert(serverKey),
+    storageBucket: config.bucket
+});
+
 const app = express();
 
 const AuthorizationRouter = require('./authorization/routes.config');
@@ -24,6 +32,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.json());
+app.locals.bucket = admin.storage().bucket();
 db.sequelize.sync( );
 // db.sequelize.sync({alter:true});
 AuthorizationRouter.routesConfig(app);
@@ -31,7 +40,7 @@ UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);
 RepairRouter.routesConfig(app);
 OrderRouter.routesConfig(app);
-
+ 
 
 app.listen(process.env.PORT || 3000, function () {
     console.log('app listening at port %s', config.port);
