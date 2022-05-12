@@ -1,7 +1,8 @@
-const order = require("../../models/models.index").order;
-const orderMachines = require("../../models/models.index").orderMachines;
-const machines = require("../../models/models.index").machine;
-const user = require("../../models/models.index").user;
+const order = require("../../models/index.models").order;
+const orderMachines = require("../../models/index.models").orderMachines;
+const machines = require("../../models/index.models").machine;
+const notification = require("../../push_notifications/notification.send");
+const Op = require('sequelize').Op;
 
 
 exports.insert = (req, res) => {
@@ -49,7 +50,8 @@ exports.get = (req, res) => {
             }
         },
         where: {
-            id: req.params.id
+            id: req.params.id,
+            orderStatus: {[Op.ne]: 0}
         }
 
     }).then((result) => {
@@ -69,9 +71,37 @@ exports.get = (req, res) => {
 exports.getAll = (req, res) => {
 
     order.findAll({
+        include:
+            [
+                {association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}},
+                {association: 'machines', through: {attributes: ['quantity', 'contractEndDate']}},
+            ],
         where: {
+            orderStatus: {
+                [Op.ne]: 0
+            }
+        }
+    }).then((result) => {
+        res.status(200).send({status: true, data: result});
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to retrieve order"});
 
-            status: 1
+
+    });
+
+};
+exports.getAllByUserId = (req, res) => {
+
+    order.findAll({
+        include: {
+            model: machines,
+            through: {
+                attributes: ['quantity', 'contractEndDate']
+            }
+        },
+        where: {
+            userId: req.jwt.userId,
+            orderStatus: {[Op.ne]: 0}
         }
     }).then((result) => {
         res.status(200).send({status: true, data: result});
@@ -88,8 +118,7 @@ exports.patchById = (req, res) => {
 
     order.update(req.body, {
         where: {
-            id: req.params.id,
-            status: 1
+            id: req.params.id
         }
     }).then((result) => {
 
@@ -112,7 +141,7 @@ exports.patchById = (req, res) => {
 exports.disableById = (req, res) => {
 
 
-    order.update({status: 0}, {
+    order.update({orderStatus: 0}, {
         where: {
             id: req.params.id
         }

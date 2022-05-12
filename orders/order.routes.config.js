@@ -8,6 +8,10 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         OrderController.insert
     ]);
+    app.get('/order/user', [
+        ValidationMiddleware.validJWTNeeded,
+        OrderController.getAllByUserId
+    ]);
     app.get('/order/:id', [
         ValidationMiddleware.validJWTNeeded,
         OrderController.get
@@ -16,6 +20,7 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         OrderController.getAll
     ]);
+
     app.put('/order/:id', [
         ValidationMiddleware.validJWTNeeded,
         OrderController.patchById

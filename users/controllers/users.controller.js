@@ -1,8 +1,8 @@
-const user = require("../../models/models.index").user;
-const notificationModel = require("../../models/models.index").notification;
+const user = require("../../models/index.models").user;
+const notificationModel = require("../../models/index.models").notification;
 
 const crypto = require('crypto');
-const notification = require('../../push_notifications/send');
+const notification = require('../../push_notifications/notification.send');
 
 exports.insert = (req, res) => {
 

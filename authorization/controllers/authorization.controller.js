@@ -1,7 +1,7 @@
 const jwtSecret = require('../../config/env.config.js').jwt_secret,
     jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const user = require("../../models/models.index").user;
+const user = require("../../models/index.models").user;
 const uuid = require('uuid');
 
 exports.login = (req, res) => {
@@ -46,7 +46,23 @@ exports.refresh_token = (req, res) => {
         res.status(200).send({status: false, errors: err});
     }
 };
-exports.welcome = (req, res) => {
+exports.revokeFCM = (req, res) => {
+    try {
+        user.update({fcm: ""}, {
+            where: {
+                id: req.jwt.userId
+            }
+        }).then((result) => {
+
+            res.status(200).send({status: true});
+
+        });
+
+
+    } catch (err) {
+        res.status(200).send({status: false});
+    }
+};exports.welcome = (req, res) => {
     try {
 
         res.status(200).send({"message": "Ensol up and running!!!"});

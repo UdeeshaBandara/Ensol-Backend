@@ -1,4 +1,4 @@
-const machine = require("../../models/models.index").machine;
+const machine = require("../../models/index.models").machine;
 
 
 exports.insert = async (req, res) => {

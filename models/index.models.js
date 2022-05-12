@@ -24,9 +24,12 @@ db.orderMachines = require("./orderMachine.model.js")(sequelize, Sequelize,DataT
 
 //Table relationships
 db.user.hasMany(db.order);
+db.order.belongsTo(db.user);
 db.user.hasMany(db.notification);
 db.machine.hasMany(db.repair);
+db.repair.belongsTo(db.machine);
 db.order.hasMany(db.repair);
+db.repair.belongsTo(db.order);
 db.order.belongsToMany(db.machine,{through:db.orderMachines});
 
 module.exports = db;

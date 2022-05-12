@@ -1,4 +1,4 @@
-const user = require("../models/models.index").user;
+const user = require("../models/index.models").user;
 const crypto = require('crypto');
 const { Op } = require("sequelize");
 
