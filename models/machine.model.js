@@ -34,7 +34,7 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
         images: {
             type: Sequelize.TEXT,
             allowNull: false,
-            defaultValue: ""
+            defaultValue: "[]"
 
         },
         status: {

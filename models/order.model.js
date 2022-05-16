@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize,DataTypes) => {
+module.exports = (sequelize, Sequelize, DataTypes) => {
 
     const order = sequelize.define("order", {
         price: {
@@ -6,13 +6,17 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             allowNull: false,
             defaultValue: 0.0
         },
+         // 0 - Cancelled
+         // 1 - Completed
+         // 2 - ongoing
+         // 3 - pending
         orderStatus: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1
+            defaultValue: 3
 
         },
-      orderDate: {
+        orderDate: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW

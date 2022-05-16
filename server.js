@@ -17,6 +17,7 @@ const UsersRouter = require('./users/routes.config');
 const MachineRouter = require('./machines/machine.routes.config');
 const RepairRouter = require('./repairs/repair.routes.config');
 const OrderRouter = require('./orders/order.routes.config');
+const AdminRouter = require('./admin/admin.routes.config');
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -40,6 +41,7 @@ UsersRouter.routesConfig(app);
 MachineRouter.routesConfig(app);
 RepairRouter.routesConfig(app);
 OrderRouter.routesConfig(app);
+AdminRouter.routesConfig(app);
 
 
 

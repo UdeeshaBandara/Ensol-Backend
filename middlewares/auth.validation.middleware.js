@@ -35,9 +35,9 @@ exports.validJWTNeeded = (req, res, next) => {
             }
 
         } catch (err) {
-            return res.status(401).send({status : false,"message": "Unauthorized"});
+            return res.status(401).send({status : false,"data": "Unauthorized"});
         }
     } else {
-        return res.status(401).send({status : false,"message": "Unauthorized"});
+        return res.status(401).send({status : false,"data": "Unauthorized"});
     }
 };

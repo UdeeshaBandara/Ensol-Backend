@@ -90,7 +90,8 @@ exports.getAll = (req, res) => {
     });
 
 };
-exports.getAllByUserId = (req, res) => {
+
+exports.getPastOrdersByUserId = (req, res) => {
 
     order.findAll({
         include: {
@@ -101,7 +102,29 @@ exports.getAllByUserId = (req, res) => {
         },
         where: {
             userId: req.jwt.userId,
-            orderStatus: {[Op.ne]: 0}
+            orderStatus: {[Op.ne]: 1}
+        }
+    }).then((result) => {
+        res.status(200).send({status: true, data: result});
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to retrieve order"});
+
+
+    });
+
+};
+exports.getCurrentOrdersByUserId = (req, res) => {
+
+    order.findAll({
+        include: {
+            model: machines,
+            through: {
+                attributes: ['quantity', 'contractEndDate']
+            }
+        },
+        where: {
+            userId: req.jwt.userId,
+            orderStatus: {[Op.ne]: 2}
         }
     }).then((result) => {
         res.status(200).send({status: true, data: result});
