@@ -66,21 +66,13 @@ exports.patchById = (req, res) => {
 };
 
 
-exports.sendNotification = (req, res) => {
 
-    notification.sendNotification(req.body.message, function (response) {
-        res.status(200).send({notification: false, response});
-    });
-
-
-};
 exports.getNotification = (req, res) => {
     notificationModel.findAll( {
         where: {
             userId: req.jwt.userId
         }
     }).then((result) => {
-        console.log(result);
 
         res.status(200).send({status: true,data:result});
 

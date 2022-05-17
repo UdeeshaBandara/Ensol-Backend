@@ -23,6 +23,7 @@ exports.insert = (req, res) => {
                     machineId: oneMachine.machineId,
                     orderId: orderResult.id,
                     quantity: oneMachine.quantity,
+                    contractStartDate: oneMachine.contractStartDate,
                     contractEndDate: oneMachine.contractEndDate
                 });
             });

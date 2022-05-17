@@ -18,6 +18,13 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             }
         },
 
+        contractStartDate: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+
+
+        },
         contractEndDate: {
             type: DataTypes.DATE,
             allowNull: false,

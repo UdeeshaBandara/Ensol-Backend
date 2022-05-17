@@ -1,6 +1,7 @@
 const repair = require("../../models/index.models").repair;
 const order = require("../../models/index.models").order;
 const user = require("../../models/index.models").user;
+const notificationModel = require("../../models/index.models").notification;
 const notification = require("../../push_notifications/notification.send");
 
 exports.insert = (req, res) => {
@@ -63,7 +64,7 @@ exports.getAll = (req, res) => {
 
 };
 
-exports.patchById = (req, res) => {
+exports.patchById = async (req, res) => {
 
 
     repair.update(req.body, {
@@ -85,27 +86,59 @@ exports.patchById = (req, res) => {
             ]
         });
         if (repairs.status === 0) {
-            notification.sendNotification(repairs.order.user.fcm, "Repair cancelled", "Your repair request has been cancelled", function (response) {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair cancelled", "Your repair request has been cancelled", async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Repair cancelled','description' : 'Your repair request has been cancelled'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: repairs.order.user.id
+                    }
+                })
 
             });
         } else if (repairs.status === 1) {
-            notification.sendNotification(repairs.order.user.fcm, "Repair completed", "Your repair has been completed. Please collect your machine", function (response) {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair completed", "Your repair has been completed. Please collect your machine", async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Repair completed','description' : 'Your repair has been completed. Please collect your machine'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: repairs.order.user.id
+                    }
+                })
 
             });
+
         } else if (repairs.status === 2) {
-            notification.sendNotification(repairs.order.user.fcm, "Repair pending", "Your repair request processing", function (response) {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair pending", "Your repair request processing", async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Repair pending','description' : 'Your repair request processing'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: repairs.order.user.id
+                    }
+                })
 
             });
+
         }
 
         if (!result[0])
 
-            res.status(200).send({status: false, data: "Failed to update repair details " + repairs});
+            res.status(200).send({status: false, data: "Failed to update repair details " });
         else
-            res.status(200).send({status: true, data: "Update successfully " + repairs});
+            res.status(200).send({status: true, data: "Update successfully " });
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to update repair " + err.message});
+        res.status(200).send({status: false, data: "Failed to update repair "});
 
 
     });
