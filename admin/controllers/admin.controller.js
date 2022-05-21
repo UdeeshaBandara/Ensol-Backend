@@ -63,6 +63,7 @@ exports.dashboardValues = async (req, res) => {
 
 
     } catch (err) {
+        console.log(err.message)
         res.status(200).send({status: false, data: "Failed to retrieve data"});
     }
 };
