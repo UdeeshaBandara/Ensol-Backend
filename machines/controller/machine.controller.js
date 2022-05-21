@@ -1,4 +1,6 @@
+const e = require("express");
 const machine = require("../../models/index.models").machine;
+const sequelize = require("../../models/index.models").sequelize;
 
 
 exports.insert = async (req, res) => {
@@ -23,7 +25,7 @@ exports.insert = async (req, res) => {
             expires: '03-09-2491'
         });
 
-       fileUrls.push(nice[0].toString());
+        fileUrls.push(nice[0].toString());
 
 
     }
@@ -46,17 +48,6 @@ exports.insert = async (req, res) => {
 
 
     });
-
-};
-
-async function  getUrlList()  {
-
-
-
-}
-
-exports.uploadImage = async (req, res) => {
-
 
 };
 
@@ -96,6 +87,43 @@ exports.getAll = (req, res) => {
 
 
     });
+
+};
+exports.home = async (req, res) => {
+
+    const topMachines = await machine.findAll({
+        attributes: {
+            include: [
+                [
+                    sequelize.literal(`(select IFNULL(sum(quantity),0) from ordermachines where machineId = machine.id)`),
+                    'quantity'
+                ]
+            ]
+        },
+        order: [
+            [sequelize.literal('quantity'), 'DESC']
+        ],
+        limit: 3
+
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to retrieve machine"});
+
+
+    });
+    const all = await machine.findAll({
+        where: {
+
+            status: 1
+        }
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to retrieve machine"});
+
+
+    });
+
+
+    res.status(200).send({status: true, data: {top_machines: topMachines, machines: all}});
+
 
 };
 

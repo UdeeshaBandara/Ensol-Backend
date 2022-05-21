@@ -12,11 +12,10 @@ exports.routesConfig = function (app) {
         upload.array('machinePhotos',5),
         MachineController.insert
     ]);
-    // app.post('/machine/image', [
-    //     ValidationMiddleware.validJWTNeeded,
-    //     upload.array('machinePhotos',5),
-    //     MachineController.uploadImage
-    // ]);
+    app.get('/machine/home', [
+        ValidationMiddleware.validJWTNeeded,
+        MachineController.home
+    ]);
     app.get('/machine/:id', [
         ValidationMiddleware.validJWTNeeded,
         MachineController.get
@@ -33,4 +32,6 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         MachineController.disableById
     ]);
+
+
 };

@@ -62,7 +62,8 @@ exports.revokeFCM = (req, res) => {
     } catch (err) {
         res.status(200).send({status: false});
     }
-};exports.welcome = (req, res) => {
+};
+exports.welcome = (req, res) => {
     try {
 
         res.status(200).send({"message": "Ensol up and running!!!"});

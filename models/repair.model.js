@@ -6,10 +6,14 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             allowNull: false,
             defaultValue: ""
         },
+
+        //0 - cancelled
+        //1 - completed
+        //2 - ongoing
         status: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 1
+            defaultValue: 2
 
         }
     });

@@ -13,7 +13,7 @@ admin.initializeApp({
 const app = express();
 
 const AuthorizationRouter = require('./authorization/routes.config');
-const UsersRouter = require('./users/routes.config');
+const UsersRouter = require('./users/user.routes.config');
 const MachineRouter = require('./machines/machine.routes.config');
 const RepairRouter = require('./repairs/repair.routes.config');
 const OrderRouter = require('./orders/order.routes.config');

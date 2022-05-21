@@ -28,16 +28,16 @@ exports.validJWTNeeded = (req, res, next) => {
         try {
             let authorization = req.headers['authorization'].split(' ');
             if (authorization[0] !== 'Bearer') {
-                return res.status(401).send({status : false,"message": "Unauthorized"});
+                return res.status(401).send({status : false,data: "Unauthorized"});
             } else {
                 req.jwt = jwt.verify(authorization[1], secret);
                 return next();
             }
 
         } catch (err) {
-            return res.status(401).send({status : false,"data": "Unauthorized"});
+            return res.status(401).send({status : false,data: "Unauthorized"});
         }
     } else {
-        return res.status(401).send({status : false,"data": "Unauthorized"});
+        return res.status(401).send({status : false,data: "Unauthorized"});
     }
 };

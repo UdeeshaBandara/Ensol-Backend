@@ -1,6 +1,9 @@
 const order = require("../../models/index.models").order;
 const orderMachines = require("../../models/index.models").orderMachines;
 const machines = require("../../models/index.models").machine;
+const user = require("../../models/index.models").user;
+
+const notificationModel = require("../../models/index.models").notification;
 const notification = require("../../push_notifications/notification.send");
 const Op = require('sequelize').Op;
 
@@ -18,15 +21,15 @@ exports.insert = (req, res) => {
 
         req.body.machines.forEach(oneMachine => {
 
-            machines.decrement({'availableQty': oneMachine.quantity}, {where: {id: oneMachine.machineId}}).then((result) => {
-                orderMachines.create({
-                    machineId: oneMachine.machineId,
-                    orderId: orderResult.id,
-                    quantity: oneMachine.quantity,
-                    contractStartDate: oneMachine.contractStartDate,
-                    contractEndDate: oneMachine.contractEndDate
-                });
+            // machines.decrement({'availableQty': oneMachine.quantity}, {where: {id: oneMachine.machineId}}).then((result) => {
+            orderMachines.create({
+                machineId: oneMachine.machineId,
+                orderId: orderResult.id,
+                quantity: oneMachine.quantity,
+                contractStartDate: oneMachine.contractStartDate,
+                contractEndDate: oneMachine.contractEndDate
             });
+            // });
 
 
         });
@@ -144,9 +147,33 @@ exports.patchById = (req, res) => {
         where: {
             id: req.params.id
         }
-    }).then((result) => {
+    }).then(async (result) => {
 
+        let orderRes = await order.findByPk(req.params.id, {
+            include: [
+                {
+                    model: user,
 
+                }
+            ]
+        });
+
+        if (orderRes.orderStatus === 2) {
+
+            await notification.sendNotification(orderRes.user.fcm, "Order accepted", "Your order has been accepted", async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Order accepted','description' : 'Your order has been accepted'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: orderRes.user.id
+                    }
+                })
+
+            });
+        }
         if (!result[0])
 
             res.status(200).send({status: false, data: "Failed to update order details"});

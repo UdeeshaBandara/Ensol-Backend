@@ -45,6 +45,9 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
             defaultValue: ""
 
         } ,
+        //11 super user
+        //1 for admin
+        //0 for normal user
         userType: {
             type: DataTypes.INTEGER,
             allowNull: false,

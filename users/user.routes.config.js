@@ -13,6 +13,10 @@ exports.routesConfig = function (app) {
         ValidationMiddleware.validJWTNeeded,
         UsersController.get
     ]);
+    app.post('/user/resetPassword', [
+        ValidationMiddleware.validJWTNeeded,
+        UsersController.resetPassword
+    ]);
 
     app.put('/user/:userId', [
         ValidationMiddleware.validJWTNeeded,

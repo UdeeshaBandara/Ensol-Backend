@@ -25,7 +25,7 @@ exports.sendNotification = (fcmToken, title, content, res) => {
             console.log(err)
         } else {
             return res(response)
-            // console.log("Successfully sent with response: ", response)
+
         }
     })
 };
