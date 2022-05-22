@@ -33,7 +33,7 @@ exports.sendOTP = (req, res) => {
 
     user.findOne({
         where: {
-            id: req.body.email
+            email: req.body.email
         }
     }).then((result) => {
         if (result == null) {
