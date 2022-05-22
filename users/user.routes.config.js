@@ -16,6 +16,9 @@ exports.routesConfig = function (app) {
     app.post('/user/OTP', [
         UsersController.sendOTP
     ]);
+    app.post('/user/resetPassword', [
+        UsersController.resetPassword
+    ]);
 
 
     app.put('/user/:userId', [

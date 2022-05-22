@@ -96,6 +96,29 @@ exports.get = (req, res) => {
 
 };
 
+exports.resetPassword = (req, res) => {
+
+    let salt = crypto.randomBytes(16).toString('base64');
+    let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64");
+    req.body.password = salt + "$" + hash;
+
+    user.update({password: req.body.password}, {
+        where: {
+            id: req.body.userId
+        }
+    }).then((result) => {
+
+
+        res.status(200).send({status: true, data: "Password reset successfully,\nPlease login with new password"});
+
+    }).catch(err => {
+        res.status(200).send({status: false, data: "Failed to update user"});
+
+
+    });
+
+
+};
 exports.patchById = (req, res) => {
 
 
