@@ -52,19 +52,24 @@ exports.sendOTP = (req, res) => {
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
                 to: 'udeeshabandara@gmail.com',
-                text: 'Hi ' + result.name + '!! \nYour OTP code is ' + otp+" \nThank you",
+                text: 'Hi ' + result.name + '!! \nYour OTP code is ' + otp + " \nThank you",
                 subject: 'Ensol Password Assist'
             };
 
             transporter.sendMail(mailOptions, function (error, info) {
-                if (error) {
-                    res.status(200).send({status: false, data: "Please try again"});
+
+            }).then((r) => {
+
+
+                if (r) {
+                    res.status(200).send({status: false, data: "Please try again" + r.message});
                 } else {
                     res.status(200).send({
                         status: true,
-                        data: {"OTP": otp,userId : result.id},message: "Please check your email inbox"
+                        data: {"OTP": otp, userId: result.id}, message: "Please check your email inbox"
                     });
                 }
+
             });
 
         }
