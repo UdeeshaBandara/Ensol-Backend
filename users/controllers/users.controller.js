@@ -29,11 +29,11 @@ exports.insert = (req, res) => {
 
 };
 
-exports.resetPassword = (req, res) => {
+exports.sendOTP = (req, res) => {
 
     user.findOne({
         where: {
-            id: req.jwt.userId
+            id: req.body.email
         }
     }).then((result) => {
         if (result == null) {
@@ -48,10 +48,11 @@ exports.resetPassword = (req, res) => {
                 }
             });
 
+            const otp = Math.floor(100000 + Math.random() * 900000)
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
                 to: 'udeeshabandara@gmail.com',
-                text: 'Hi ' + result.name + '!! \nYour OTP code is ' + Math.floor(100000 + Math.random() * 900000),
+                text: 'Hi ' + result.name + '!! \nYour OTP code is ' + otp+" \nThank you",
                 subject: 'Ensol Password Assist'
             };
 
@@ -59,7 +60,10 @@ exports.resetPassword = (req, res) => {
                 if (error) {
                     res.status(200).send({status: false, data: "Please try again"});
                 } else {
-                    res.status(200).send({status: true, data: "Please check your email inbox"});
+                    res.status(200).send({
+                        status: true,
+                        data: {"OTP": otp,userId : result.id},message: "Please check your email inbox"
+                    });
                 }
             });
 
@@ -71,6 +75,7 @@ exports.resetPassword = (req, res) => {
     });
 
 };
+
 exports.get = (req, res) => {
 
     user.findAll({

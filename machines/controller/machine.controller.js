@@ -1,5 +1,6 @@
 const e = require("express");
 const machine = require("../../models/index.models").machine;
+const orders = require("../../models/index.models").order;
 const sequelize = require("../../models/index.models").sequelize;
 
 
@@ -92,6 +93,12 @@ exports.getAll = (req, res) => {
 exports.home = async (req, res) => {
 
     const topMachines = await machine.findAll({
+        include: {
+            model: orders,
+            through: {
+                attributes: ['quantity', 'contractEndDate']
+            }
+        },
         attributes: {
             include: [
                 [
@@ -106,7 +113,7 @@ exports.home = async (req, res) => {
         limit: 3
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to retrieve machine"});
+      return  res.status(200).send({status: false, data: "Failed to retrieve machine 1" +err.message});
 
 
     });
@@ -116,7 +123,7 @@ exports.home = async (req, res) => {
             status: 1
         }
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to retrieve machine"});
+        return   res.status(200).send({status: false, data: "Failed to retrieve machine"});
 
 
     });
@@ -179,11 +186,3 @@ exports.disableById = (req, res) => {
 };
 
 
-exports.sendNotification = (req, res) => {
-
-    notification.sendNotification(req.body.message, function (response) {
-        res.status(200).send({notification: false, response});
-    });
-
-
-};

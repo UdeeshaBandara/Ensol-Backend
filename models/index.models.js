@@ -31,5 +31,6 @@ db.repair.belongsTo(db.machine);
 db.order.hasMany(db.repair);
 db.repair.belongsTo(db.order);
 db.order.belongsToMany(db.machine,{through:db.orderMachines});
+db.machine.belongsToMany(db.order,{through:db.orderMachines});
 
 module.exports = db;
