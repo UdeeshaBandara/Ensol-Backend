@@ -37,7 +37,7 @@ exports.sendOTP = (req, res) => {
         }
     }).then(async (result) => {
         if (result == null) {
-            res.status(200).send({status: false, data: "Invalid Email!!"});
+            res.status(200).send({status: false, data: "Cannot find a user with this email"});
         } else {
 
             const transporter = nodemailer.createTransport({
@@ -48,7 +48,7 @@ exports.sendOTP = (req, res) => {
                 }
             });
 
-            const otp = Math.floor(100000 + Math.random() * 900000)
+            const otp = Math.floor(1000 + Math.random() * 9000)
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
                 to: req.body.email,
@@ -58,7 +58,6 @@ exports.sendOTP = (req, res) => {
 
             const emailResponse = await transporter.sendMail(mailOptions);
 
-            console.log(emailResponse)
 
             if (emailResponse.response.includes("2.0.0 OK")) {
                 return res.status(200).send({
@@ -68,7 +67,7 @@ exports.sendOTP = (req, res) => {
             } else {
                 return res.status(200).send({
                     status: true,
-                    data: "Failed to email"
+                    data: "Failed to send email!! PLease try again"
                 });
             }
 
@@ -76,7 +75,7 @@ exports.sendOTP = (req, res) => {
         }
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to get user" + err.message});
+        res.status(200).send({status: false, data: "Failed to get user"});
 
     });
 
