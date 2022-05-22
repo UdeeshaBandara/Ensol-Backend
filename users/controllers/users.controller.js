@@ -35,7 +35,7 @@ exports.sendOTP = (req, res) => {
         where: {
             email: req.body.email
         }
-    }).then((result) => {
+    }).then(async (result) => {
         if (result == null) {
             res.status(200).send({status: false, data: "Invalid Email!!"});
         } else {
@@ -51,31 +51,32 @@ exports.sendOTP = (req, res) => {
             const otp = Math.floor(100000 + Math.random() * 900000)
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
-                to: 'udeeshabandara@gmail.com',
+                to: req.body.email,
                 text: 'Hi ' + result.name + '!! \nYour OTP code is ' + otp + " \nThank you",
                 subject: 'Ensol Password Assist'
             };
 
-            transporter.sendMail(mailOptions, function (error, info) {
+            const emailResponse = await transporter.sendMail(mailOptions);
 
-            }).then((r) => {
+            console.log(emailResponse)
 
+            if (emailResponse.response.includes("2.0.0 OK")) {
+                return res.status(200).send({
+                    status: true,
+                    data: {"OTP": otp, userId: result.id}, message: "Please check your email inbox"
+                });
+            } else {
+                return res.status(200).send({
+                    status: true,
+                    data: "Failed to email"
+                });
+            }
 
-                if (r) {
-                    res.status(200).send({status: false, data: "Please try again" + r.message});
-                } else {
-                    res.status(200).send({
-                        status: true,
-                        data: {"OTP": otp, userId: result.id}, message: "Please check your email inbox"
-                    });
-                }
-
-            });
 
         }
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to get user"});
+        res.status(200).send({status: false, data: "Failed to get user" + err.message});
 
     });
 
