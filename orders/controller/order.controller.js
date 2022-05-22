@@ -48,14 +48,11 @@ exports.get = (req, res) => {
 
     order.findOne({
         include: {
-            model: machines,
-            through: {
+            model: machines, through: {
                 attributes: ['quantity', 'contractEndDate']
             }
-        },
-        where: {
-            id: req.params.id,
-            orderStatus: {[Op.ne]: 0}
+        }, where: {
+            id: req.params.id, orderStatus: {[Op.ne]: 0}
         }
 
     }).then((result) => {
@@ -75,12 +72,10 @@ exports.get = (req, res) => {
 exports.getAll = (req, res) => {
 
     order.findAll({
-        include:
-            [
-                {association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}},
-                {association: 'machines', through: {attributes: ['quantity', 'contractEndDate']}},
-            ],
-        where: {
+        include: [{association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}}, {
+            association: 'machines',
+            through: {attributes: ['quantity', 'contractEndDate']}
+        },], where: {
             orderStatus: {
                 [Op.ne]: 0
             }
@@ -99,14 +94,11 @@ exports.getPastOrdersByUserId = (req, res) => {
 
     order.findAll({
         include: {
-            model: machines,
-            through: {
-                attributes: ['quantity', 'contractEndDate']
+            model: machines, through: {
+                attributes: ['quantity','contractStartDate', 'contractEndDate']
             }
-        },
-        where: {
-            userId: req.jwt.userId,
-            orderStatus: {[Op.ne]: 1}
+        }, where: {
+            userId: req.jwt.userId, orderStatus: {[Op.or]: [0, 1]}
         }
     }).then((result) => {
         res.status(200).send({status: true, data: result});
@@ -121,14 +113,11 @@ exports.getCurrentOrdersByUserId = (req, res) => {
 
     order.findAll({
         include: {
-            model: machines,
-            through: {
-                attributes: ['quantity', 'contractEndDate']
+            model: machines, through: {
+                attributes: ['quantity', 'contractStartDate','contractEndDate']
             }
-        },
-        where: {
-            userId: req.jwt.userId,
-            orderStatus: {[Op.ne]: 2}
+        }, where: {
+            userId: req.jwt.userId, orderStatus: {[Op.or]: [2, 3]}
         }
     }).then((result) => {
         res.status(200).send({status: true, data: result});
@@ -150,19 +139,47 @@ exports.patchById = (req, res) => {
     }).then(async (result) => {
 
         let orderRes = await order.findByPk(req.params.id, {
-            include: [
-                {
-                    model: user,
+            include: [{
+                model: user,
 
-                }
-            ]
+            }]
         });
 
-        if (orderRes.orderStatus === 2) {
+        if (orderRes.orderStatus === 0) {
 
-            await notification.sendNotification(orderRes.user.fcm, "Order accepted", "Your order has been accepted", async function () {
+            await notification.sendNotification(orderRes.user.fcm, "Order cancelled", "Your order has been cancelled. \nOrder #ZES" + req.params.id, async function () {
                 await notificationModel.create({
-                    content: "{'title' : 'Order accepted','description' : 'Your order has been accepted'}",
+                    content: "{'title' : 'Order cancelled','description' : 'Your order has been rejected. \nOrder #ZES" + req.params.id + "'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: orderRes.user.id
+                    }
+                })
+
+            });
+        }else if (orderRes.orderStatus === 1) {
+
+            await notification.sendNotification(orderRes.user.fcm, "Order completed", "Your order has been completed. \nOrder #ZES" + req.params.id, async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Order completed','description' : 'Your order has been completed. \nOrder #ZES" + req.params.id + "'}",
+
+                    userId: req.jwt.userId
+                }, {
+
+                    where: {
+                        id: orderRes.user.id
+                    }
+                })
+
+            });
+        } else if (orderRes.orderStatus === 2) {
+
+            await notification.sendNotification(orderRes.user.fcm, "Order accepted ", "Your order has been accepted. \nOrder #ZES" + req.params.id, async function () {
+                await notificationModel.create({
+                    content: "{'title' : 'Order accepted','description' : 'Your order has been accepted. \nOrder #ZES" + req.params.id + "'}",
 
                     userId: req.jwt.userId
                 }, {
@@ -176,9 +193,10 @@ exports.patchById = (req, res) => {
         }
         if (!result[0])
 
-            res.status(200).send({status: false, data: "Failed to update order details"});
-        else
-            res.status(200).send({status: true, data: "Update successfully"});
+            res.status(200).send({
+                status: false,
+                data: "Failed to update order details"
+            }); else res.status(200).send({status: true, data: "Update successfully"});
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to update order"});
@@ -201,9 +219,10 @@ exports.disableById = (req, res) => {
 
         if (!result[0])
 
-            res.status(200).send({status: false, data: "Failed to delete order details"});
-        else
-            res.status(200).send({status: true, data: "Delete successfully"});
+            res.status(200).send({
+                status: false,
+                data: "Failed to delete order details"
+            }); else res.status(200).send({status: true, data: "Delete successfully"});
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to delete order"});
@@ -215,11 +234,3 @@ exports.disableById = (req, res) => {
 };
 
 
-exports.sendNotification = (req, res) => {
-
-    notification.sendNotification(req.body.message, function (response) {
-        res.status(200).send({notification: false, response});
-    });
-
-
-};

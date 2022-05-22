@@ -86,9 +86,9 @@ exports.patchById = async (req, res) => {
             ]
         });
         if (repairs.status === 0) {
-            await notification.sendNotification(repairs.order.user.fcm, "Repair cancelled", "Your repair request has been cancelled", async function () {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair cancelled", "Your repair request has been cancelled. \nRepair #ENR" + req.params.id, async function () {
                 await notificationModel.create({
-                    content: "{'title' : 'Repair cancelled','description' : 'Your repair request has been cancelled'}",
+                    content: "{'title' : 'Repair cancelled','description' : 'Your repair request has been cancelled. \nRepair #ENR" + req.params.id + "'}",
 
                     userId: req.jwt.userId
                 }, {
@@ -100,9 +100,9 @@ exports.patchById = async (req, res) => {
 
             });
         } else if (repairs.status === 1) {
-            await notification.sendNotification(repairs.order.user.fcm, "Repair completed", "Your repair has been completed. Please collect your machine", async function () {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair completed", "Your repair has been completed. Please collect your machine. \nRepair #ENR" + req.params.id, async function () {
                 await notificationModel.create({
-                    content: "{'title' : 'Repair completed','description' : 'Your repair has been completed. Please collect your machine'}",
+                    content: "{'title' : 'Repair completed','description' : 'Your repair has been completed. Please collect your machine. \nRepair #ENR" + req.params.id + "'}",
 
                     userId: req.jwt.userId
                 }, {
@@ -115,9 +115,9 @@ exports.patchById = async (req, res) => {
             });
 
         } else if (repairs.status === 2) {
-            await notification.sendNotification(repairs.order.user.fcm, "Repair pending", "Your repair request processing", async function () {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair pending", "Your repair request processing. \nRepair #ENR" + req.params.id, async function () {
                 await notificationModel.create({
-                    content: "{'title' : 'Repair pending','description' : 'Your repair request processing'}",
+                    content: "{'title' : 'Repair pending','description' : 'Your repair request processing. \nRepair #ENR" + req.params.id + "'}",
 
                     userId: req.jwt.userId
                 }, {
@@ -133,9 +133,9 @@ exports.patchById = async (req, res) => {
 
         if (!result[0])
 
-            res.status(200).send({status: false, data: "Failed to update repair details " });
+            res.status(200).send({status: false, data: "Failed to update repair details "});
         else
-            res.status(200).send({status: true, data: "Update successfully " });
+            res.status(200).send({status: true, data: "Update successfully "});
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to update repair "});

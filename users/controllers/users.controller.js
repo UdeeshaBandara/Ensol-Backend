@@ -4,6 +4,7 @@ const notificationModel = require("../../models/index.models").notification;
 const crypto = require('crypto');
 const notification = require('../../push_notifications/notification.send');
 const nodemailer = require('nodemailer');
+const {sequelize} = require("../../models/index.models");
 
 exports.insert = (req, res) => {
 
@@ -145,7 +146,10 @@ exports.getNotification = (req, res) => {
     notificationModel.findAll({
         where: {
             userId: req.jwt.userId
-        }
+        },
+        order: [
+            [sequelize.literal('createdAt'), 'DESC']
+        ],
     }).then((result) => {
 
         res.status(200).send({status: true, data: result});
