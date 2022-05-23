@@ -56,7 +56,9 @@ exports.dashboardValues = async (req, res) => {
                             ]
 
 
-                    }], attributes: {
+                    },
+                    {
+                        association: 'machine',}], attributes: {
                 include: [
                     [
                         sequelize.literal(`(select contractStartDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
