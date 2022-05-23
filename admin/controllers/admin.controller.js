@@ -58,19 +58,20 @@ exports.dashboardValues = async (req, res) => {
 
                     },
                     {
-                        association: 'machine',}], attributes: {
-                include: [
-                    [
-                        sequelize.literal(`(select contractStartDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
-                        'contractStartDate'
+                        association: 'machine', attributes: {
+                            include: [
+                                [
+                                    sequelize.literal(`(select contractStartDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                                    'contractStartDate'
 
-                    ], [
-                        sequelize.literal(`(select contractEndDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
-                        'contractEndDate'
+                                ], [
+                                    sequelize.literal(`(select contractEndDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                                    'contractEndDate'
 
-                    ]
-                ]
-            },
+                                ]
+                            ]
+                        }
+                    }],
 
 
         })
