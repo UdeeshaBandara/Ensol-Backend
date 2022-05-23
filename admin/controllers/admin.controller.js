@@ -37,30 +37,21 @@ exports.dashboardValues = async (req, res) => {
                 [
                     {association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}},
                     {association: 'machines', through: {attributes: ['quantity', 'contractEndDate']}},
-                ],
-            where: {
-                orderStatus: {
-                    [Op.ne]: 0
-                }
-            }
+                ]
         })
 
-        // user.update({fcm: req.body.fcm}, {
-        //     where: {
-        //         email: req.body.email
-        //     }
-        // }).then((result) => {
-        //     console.log(result);
-        //
-        //
-        // }).catch(err => {
-        //     err.errors.map(e =>
-        //         res.status(200).send({
-        //             status: false,
-        //             message: e.message
-        //         }));
-        // });
-        res.status(200).send({status: true, data: {top_values: topValues, orders: orders}});
+        const repairs = await repair.findAll({
+            include:
+                [
+                    {
+                        association: 'order',
+                        include: {association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}},
+
+                    },
+                    {association: 'machine'},
+                ],
+        })
+        res.status(200).send({status: true, data: {top_values: topValues, orders: orders, repairs: repairs}});
 
 
     } catch (err) {

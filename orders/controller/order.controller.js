@@ -78,11 +78,7 @@ exports.getAll = (req, res) => {
         include: [{association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}}, {
             association: 'machines',
             through: {attributes: ['quantity', 'contractEndDate']}
-        },], where: {
-            orderStatus: {
-                [Op.ne]: 0
-            }
-        }
+        },],
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {
