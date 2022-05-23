@@ -26,6 +26,7 @@ exports.routesConfig = function (app) {
     ]);
     app.put('/machine/:id', [
         ValidationMiddleware.validJWTNeeded,
+        upload.array('machinePhotos',5),
         MachineController.patchById
     ]);
     app.delete('/machine/:id', [

@@ -113,7 +113,7 @@ exports.home = async (req, res) => {
         limit: 3
 
     }).catch(err => {
-      return  res.status(200).send({status: false, data: "Failed to retrieve machine 1" +err.message});
+        return res.status(200).send({status: false, data: "Failed to retrieve machine 1" + err.message});
 
 
     });
@@ -123,7 +123,7 @@ exports.home = async (req, res) => {
             status: 1
         }
     }).catch(err => {
-        return   res.status(200).send({status: false, data: "Failed to retrieve machine"});
+        return res.status(200).send({status: false, data: "Failed to retrieve machine"});
 
 
     });
@@ -134,8 +134,26 @@ exports.home = async (req, res) => {
 
 };
 
-exports.patchById = (req, res) => {
+exports.patchById = async (req, res) => {
 
+
+    if (req.files.length > 0) {
+        let fileUrls = [];
+        for (let i = 0; i < req.files.length; i++) {
+            await req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
+
+            const file = req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
+            let nice = await file.getSignedUrl({
+                action: 'read',
+                expires: '03-09-2491'
+            });
+
+            fileUrls.push(nice[0].toString());
+
+
+        }
+        req.body.images = JSON.stringify(fileUrls).toString()
+    }
 
     machine.update(req.body, {
         where: {

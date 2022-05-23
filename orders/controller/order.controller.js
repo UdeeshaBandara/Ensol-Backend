@@ -5,6 +5,7 @@ const user = require("../../models/index.models").user;
 
 const notificationModel = require("../../models/index.models").notification;
 const notification = require("../../push_notifications/notification.send");
+const {sequelize} = require("../../models/index.models");
 const Op = require('sequelize').Op;
 
 
@@ -99,7 +100,10 @@ exports.getPastOrdersByUserId = (req, res) => {
             }
         }, where: {
             userId: req.jwt.userId, orderStatus: {[Op.or]: [0, 1]}
-        }
+        },
+        order: [
+            [sequelize.literal('createdAt'), 'DESC']
+        ]
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {
@@ -118,7 +122,10 @@ exports.getCurrentOrdersByUserId = (req, res) => {
             }
         }, where: {
             userId: req.jwt.userId, orderStatus: {[Op.or]: [2, 3]}
-        }
+        },
+        order: [
+            [sequelize.literal('createdAt'), 'DESC']
+        ]
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {

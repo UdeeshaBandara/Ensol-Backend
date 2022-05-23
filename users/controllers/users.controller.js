@@ -76,7 +76,8 @@ exports.sendOTP = (req, res) => {
         }
 
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to get user"});
+        console.log(err.message)
+        res.status(200).send({status: false, data: "Failed to get user "});
 
     });
 
@@ -84,14 +85,15 @@ exports.sendOTP = (req, res) => {
 
 exports.get = (req, res) => {
 
-    user.findAll({
+    user.findOne({
         where: {
-            email: req.body.email
-        }
+            id: req.jwt.userId
+        },
+        attributes: {exclude: ['password', 'fcm']}
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to reset password"});
+        res.status(200).send({status: false, data: "Failed to get user details"});
 
     });
 
@@ -122,6 +124,9 @@ exports.resetPassword = (req, res) => {
 };
 exports.patchById = (req, res) => {
 
+    let salt = crypto.randomBytes(16).toString('base64');
+    let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64");
+    req.body.password = salt + "$" + hash;
 
     user.update(req.body, {
         where: {
