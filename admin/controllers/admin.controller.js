@@ -5,6 +5,7 @@ const user = require("../../models/index.models").user;
 const orderMachines = require("../../models/index.models").orderMachines;
 const order = require("../../models/index.models").order;
 const moment = require('moment');
+const {sequelize} = require("../../models/index.models");
 
 
 exports.dashboardValues = async (req, res) => {
@@ -45,11 +46,31 @@ exports.dashboardValues = async (req, res) => {
                 [
                     {
                         association: 'order',
-                        include: {association: 'user', attributes: {exclude: ['password', 'status', 'fcm']}},
+                        include:
+                            [
 
-                    },
-                    {association: 'machine'},
-                ],
+                                {
+                                    association: 'user',
+                                    attributes: {exclude: ['password', 'status', 'fcm']}
+                                },
+                            ]
+
+
+                    }], attributes: {
+                include: [
+                    [
+                        sequelize.literal(`(select contractStartDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                        'contractStartDate'
+
+                    ], [
+                        sequelize.literal(`(select contractEndDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                        'contractEndDate'
+
+                    ]
+                ]
+            },
+
+
         })
         res.status(200).send({status: true, data: {top_values: topValues, orders: orders, repairs: repairs}});
 

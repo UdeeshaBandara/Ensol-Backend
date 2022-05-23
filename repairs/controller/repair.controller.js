@@ -26,7 +26,9 @@ exports.get = (req, res) => {
     repair.findOne({
         include:
             [
-                {association: 'order'},
+                {association: 'order',include :{
+                    model : user,attributes: {exclude: ['password', 'status', 'fcm']}
+                    }},
                 {association: 'machine'},
             ],
         where: {
