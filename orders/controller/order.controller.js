@@ -14,7 +14,6 @@ exports.insert = (req, res) => {
 
     order.create({
         description: req.body.description,
-        status: 0,
         price: req.body.price,
         orderDate: req.body.orderDate,
         userId: req.jwt.userId
@@ -56,7 +55,7 @@ exports.get = (req, res) => {
             model: user,
             attributes: {exclude: ['password', 'status', 'fcm']}
         }], where: {
-            id: req.params.id, orderStatus: {[Op.ne]: 0}
+            id: req.params.id
         }
 
     }).then((result) => {
