@@ -45,7 +45,7 @@ exports.sendOTP = (req, res) => {
                 service: 'gmail',
                 auth: {
                     user: 'nibmprojectreset@gmail.com',
-                    pass: 'projectpassword'
+                    pass: 'rdjokmxeovmyjznw'
                 }
             });
 

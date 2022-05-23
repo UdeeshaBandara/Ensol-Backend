@@ -48,11 +48,14 @@ exports.insert = (req, res) => {
 exports.get = (req, res) => {
 
     order.findOne({
-        include: {
+        include: [{
             model: machines, through: {
                 attributes: ['quantity', 'contractEndDate']
             }
-        }, where: {
+        },{
+            model: user,
+            attributes: {exclude: ['password', 'status', 'fcm']}
+        }], where: {
             id: req.params.id, orderStatus: {[Op.ne]: 0}
         }
 
