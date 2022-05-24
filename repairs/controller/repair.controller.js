@@ -3,6 +3,7 @@ const order = require("../../models/index.models").order;
 const user = require("../../models/index.models").user;
 const notificationModel = require("../../models/index.models").notification;
 const notification = require("../../push_notifications/notification.send");
+const {sequelize} = require("../../models/index.models");
 
 exports.insert = (req, res) => {
 
@@ -26,11 +27,35 @@ exports.get = (req, res) => {
     repair.findOne({
         include:
             [
-                {association: 'order',include :{
-                    model : user,attributes: {exclude: ['password', 'status', 'fcm']}
-                    }},
-                {association: 'machine'},
-            ],
+                {
+                    association: 'order',
+                    include:
+                        [
+
+                            {
+                                association: 'user',
+                                attributes: {exclude: ['password', 'status', 'fcm']}
+                            },
+                        ]
+
+
+                },
+                {
+                    association: 'machine', attributes: {
+                        include: [
+                            [
+                                sequelize.literal(`(select contractStartDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                                'contractStartDate'
+
+                            ], [
+                                sequelize.literal(`(select contractEndDate from ordermachines where machineId = repair.machineId AND orderId = repair.orderId)`),
+                                'contractEndDate'
+
+                            ]
+                        ]
+                    }
+                }],
+
         where: {
             id: req.params.id
         }
