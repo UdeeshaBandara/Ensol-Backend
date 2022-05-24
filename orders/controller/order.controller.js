@@ -49,7 +49,7 @@ exports.get = (req, res) => {
     order.findOne({
         include: [{
             model: machines, through: {
-                attributes: ['quantity', 'contractEndDate']
+                attributes: ['quantity', 'contractStartDate','contractEndDate']
             }
         },{
             model: user,
