@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
         },
          // 0 - Cancelled
          // 1 - Completed
-         // 2 - ongoing
+         // 2 - accepted
          // 3 - pending
         orderStatus: {
             type: DataTypes.INTEGER,

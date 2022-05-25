@@ -9,11 +9,12 @@ module.exports = (sequelize, Sequelize,DataTypes) => {
 
         //0 - cancelled
         //1 - completed
-        //2 - ongoing
+        //2 - accepted
+        //3 - pending
         status: {
             type: DataTypes.INTEGER,
             allowNull: false,
-            defaultValue: 2
+            defaultValue: 3
 
         }
     });

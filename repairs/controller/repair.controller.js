@@ -76,6 +76,9 @@ exports.get = (req, res) => {
 exports.getAll = (req, res) => {
 
     repair.findAll({
+        where: {
+            ['$order.user.id$']: req.jwt.userId
+        },
         include:
             [
                 {
@@ -83,7 +86,10 @@ exports.getAll = (req, res) => {
                     include: user,
                 },
                 {association: 'machine'},
-            ]
+            ],
+        order: [
+            [sequelize.literal('createdAt'), 'DESC']
+        ]
 
     }).then((result) => {
         res.status(200).send({status: true, data: result});

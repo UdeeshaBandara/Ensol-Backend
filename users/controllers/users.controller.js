@@ -53,7 +53,7 @@ exports.sendOTP = (req, res) => {
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
                 to: req.body.email,
-                text: 'Hello ' + result.name + '!! \nBelow is your one time verification code : ' + otp + "Use the above verification code and if you are having any issues with your account, please don't hesitate to contact us through 0333330873. \nThank you",
+                text: 'Hello ' + result.name + '!! \nBelow is your one time verification code : \n' + otp + "\nUse the above verification code and if you are having any issues with your account, please don't hesitate to contact us through 0333330873. \n\nThank you",
                 subject: 'Ensol Password Assist'
             };
 
@@ -197,7 +197,7 @@ exports.getNotification = (req, res) => {
         ],
     }).then((result) => {
 
-        if (result.length > 0) {
+        if (result[0]) {
             res.status(200).send({status: true, data: result});
         } else {
             res.status(200).send({status: false, data: "No Notifications Available"});
