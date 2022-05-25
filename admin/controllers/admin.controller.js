@@ -13,9 +13,8 @@ exports.dashboardValues = async (req, res) => {
 
 
         let topValues = {
-            total_machines: await machine.count({
-                col: 'id'
-            }), repair_count: await repair.count({
+            total_machines: await machine.sum('availableQty'),
+            repair_count: await repair.count({
                 col: 'id'
             }), user_count: await user.count({
                 col: 'id', where: {userType: "0"},
