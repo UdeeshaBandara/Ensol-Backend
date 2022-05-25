@@ -8,6 +8,14 @@ exports.routesConfig = function (app) {
         AuthValidationMiddleware.validJWTNeeded,
         AdminController.dashboardValues
     ]);
+    app.post('/admin/order/filter', [
+        AuthValidationMiddleware.validJWTNeeded,
+        AdminController.getOrdersByDate
+    ]);
+    app.post('/admin/repair/filter', [
+        AuthValidationMiddleware.validJWTNeeded,
+        AdminController.getRepairsByDate
+    ]);
 
 
 
