@@ -3,7 +3,6 @@ const crypto = require('crypto');
 const {Op} = require("sequelize");
 
 exports.hasAuthValidFields = (req, res, next) => {
-    let errors = [];
 
     if (req.body) {
         if (!req.body.email) {
@@ -48,7 +47,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
                 };
                 return next();
             } else {
-                return res.status(200).send({status: false, data: 'Invalid e-mail or password'});
+                return res.status(200).send({status: false, data: 'Invalid password'});
             }
         }
 

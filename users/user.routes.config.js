@@ -21,10 +21,9 @@ exports.routesConfig = function (app) {
     ]);
 
 
-    app.put('/user/:userId', [
+    app.put('/user/update', [
         ValidationMiddleware.validJWTNeeded,
-        VerifyUserMiddleware.isPasswordAndUserMatch,
-        UsersController.patchById
+        UsersController.updateUserDetails
     ]);
 
     app.get('/user/notification', [

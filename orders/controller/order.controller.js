@@ -49,9 +49,9 @@ exports.get = (req, res) => {
     order.findOne({
         include: [{
             model: machines, through: {
-                attributes: ['quantity', 'contractStartDate','contractEndDate']
+                attributes: ['quantity', 'contractStartDate', 'contractEndDate']
             }
-        },{
+        }, {
             model: user,
             attributes: {exclude: ['password', 'status', 'fcm']}
         }], where: {
@@ -94,7 +94,7 @@ exports.getPastOrdersByUserId = (req, res) => {
     order.findAll({
         include: {
             model: machines, through: {
-                attributes: ['quantity','contractStartDate', 'contractEndDate']
+                attributes: ['quantity', 'contractStartDate', 'contractEndDate']
             }
         }, where: {
             userId: req.jwt.userId, orderStatus: {[Op.or]: [0, 1]}
@@ -116,7 +116,7 @@ exports.getCurrentOrdersByUserId = (req, res) => {
     order.findAll({
         include: {
             model: machines, through: {
-                attributes: ['quantity', 'contractStartDate','contractEndDate']
+                attributes: ['quantity', 'contractStartDate', 'contractEndDate']
             }
         }, where: {
             userId: req.jwt.userId, orderStatus: {[Op.or]: [2, 3]}
@@ -165,7 +165,7 @@ exports.patchById = (req, res) => {
                 })
 
             });
-        }else if (orderRes.orderStatus === 1) {
+        } else if (orderRes.orderStatus === 1) {
 
             await notification.sendNotification(orderRes.user.fcm, "Order completed", "Your order has been completed. \nOrder #ZES" + req.params.id, async function () {
                 await notificationModel.create({
