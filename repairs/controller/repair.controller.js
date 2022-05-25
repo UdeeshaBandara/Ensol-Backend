@@ -127,12 +127,7 @@ exports.patchById = async (req, res) => {
                 await notificationModel.create({
                     content: "{'title' : 'Repair cancelled','description' : 'Your repair request has been cancelled. \nRepair #ENR" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: repairs.order.user.id
-                    }
+                    userId: repairs.order.user.id
                 })
 
             });
@@ -141,27 +136,17 @@ exports.patchById = async (req, res) => {
                 await notificationModel.create({
                     content: "{'title' : 'Repair completed','description' : 'Your repair has been completed. Please collect your machine. \nRepair #ENR" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: repairs.order.user.id
-                    }
+                    userId: repairs.order.user.id
                 })
 
             });
 
         } else if (repairs.status === 2) {
-            await notification.sendNotification(repairs.order.user.fcm, "Repair pending", "Your repair request processing. \nRepair #ENR" + req.params.id, async function () {
+            await notification.sendNotification(repairs.order.user.fcm, "Repair accepted", "Your repair request accepted. \nRepair #ENR" + req.params.id, async function () {
                 await notificationModel.create({
-                    content: "{'title' : 'Repair pending','description' : 'Your repair request processing. \nRepair #ENR" + req.params.id + "'}",
+                    content: "{'title' : 'Repair accepted','description' : 'Your repair request accepted. \nRepair #ENR" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: repairs.order.user.id
-                    }
+                    userId: repairs.order.user.id
                 })
 
             });

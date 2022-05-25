@@ -156,12 +156,7 @@ exports.patchById = (req, res) => {
                 await notificationModel.create({
                     content: "{'title' : 'Order cancelled','description' : 'Your order has been rejected. \nOrder #ZES" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: orderRes.user.id
-                    }
+                    userId:  orderRes.user.id
                 })
 
             });
@@ -171,12 +166,7 @@ exports.patchById = (req, res) => {
                 await notificationModel.create({
                     content: "{'title' : 'Order completed','description' : 'Your order has been completed. \nOrder #ZES" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: orderRes.user.id
-                    }
+                    userId:  orderRes.user.id
                 })
 
             });
@@ -186,12 +176,7 @@ exports.patchById = (req, res) => {
                 await notificationModel.create({
                     content: "{'title' : 'Order accepted','description' : 'Your order has been accepted. \nOrder #ZES" + req.params.id + "'}",
 
-                    userId: req.jwt.userId
-                }, {
-
-                    where: {
-                        id: orderRes.user.id
-                    }
+                    userId:  orderRes.user.id
                 })
 
             });
