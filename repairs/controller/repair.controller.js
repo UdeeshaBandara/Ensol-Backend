@@ -78,9 +78,13 @@ exports.getAll = (req, res) => {
     repair.findAll({
         include:
             [
-                {association: 'order'},
+                {
+                    association: 'order',
+                    include: user,
+                },
                 {association: 'machine'},
-            ],
+            ]
+
     }).then((result) => {
         res.status(200).send({status: true, data: result});
     }).catch(err => {

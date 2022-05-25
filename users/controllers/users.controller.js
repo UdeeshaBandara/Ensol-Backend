@@ -53,7 +53,7 @@ exports.sendOTP = (req, res) => {
             const mailOptions = {
                 from: 'nibmprojectreset@gmail.com',
                 to: req.body.email,
-                text: 'Hi ' + result.name + '!! \nYour OTP code is ' + otp + " \nThank you",
+                text: 'Hello ' + result.name + '!! \nBelow is your one time verification code : ' + otp + "Use the above verification code and if you are having any issues with your account, please don't hesitate to contact us through 0333330873. \nThank you",
                 subject: 'Ensol Password Assist'
             };
 
