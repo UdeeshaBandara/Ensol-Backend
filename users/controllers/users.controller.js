@@ -157,7 +157,11 @@ exports.getNotification = (req, res) => {
         ],
     }).then((result) => {
 
-        res.status(200).send({status: true, data: result});
+        if (result.length > 0) {
+            res.status(200).send({status: true, data: result});
+        } else {
+            res.status(200).send({status: false, data: "No Notifications Available"});
+        }
 
     }).catch(err => {
         res.status(200).send({status: false, data: "Failed to get notifications"});
