@@ -47,10 +47,11 @@ exports.insert = async (req, res) => {
 
                 res.status(200).send({status: false, data: "Failed to save machine details"});
             else
-                res.status(201).send({status: true, data: "Machine save successfully"});
+                res.status(201).send({status: true, data: "Machine saved successfully"});
 
         }).catch(err => {
-            res.status(200).send({status: false, data: "Failed to update machine"});
+            console.log(err.message);
+            res.status(200).send({status: false, data: "Failed to save machine"});
 
 
         });
