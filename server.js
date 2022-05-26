@@ -2,8 +2,9 @@ const config = require('./config/env.config.js');
 
 const db = require("./models/index.models");
 const express = require('express');
-const admin = require("firebase-admin")
+const admin = require("firebase-admin");
 const serverKey = require('./private_key.json');
+const expressValidator = require('express-validator');
 
 admin.initializeApp({
     credential: admin.credential.cert(serverKey),
@@ -33,6 +34,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.json());
+app.use(expressValidator());
 app.locals.bucket = admin.storage().bucket();
 // db.sequelize.sync( );
 // db.sequelize.sync({alter:true});

@@ -1,6 +1,7 @@
 const MachineController = require('./controller/machine.controller');
 const VerifyUserMiddleware = require('../middlewares/verify.user.middleware');
 const ValidationMiddleware = require('../middlewares/auth.validation.middleware');
+const RequestValidationMiddleware = require('../middlewares/request.validation.middleware');
 const config = require('../config/env.config');
 const multer=require('multer');
 const upload=multer({storage: multer.memoryStorage()});
