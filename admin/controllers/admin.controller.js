@@ -74,8 +74,8 @@ exports.getOrdersByDate = async (req, res) => {
             },], order: [[sequelize.literal('createdAt'), 'DESC']],
             where: {
                 [Op.and]: [
-                    sequelize.where(sequelize.fn('date', sequelize.col('orderDate')), '>=', req.body.startDate),
-                    sequelize.where(sequelize.fn('date', sequelize.col('orderDate')), '<=', req.body.endDate),
+                    sequelize.where(sequelize.fn('date', sequelize.col('orderDate')), '>=', req.body.startDate.toString().substring(0,10)),
+                    sequelize.where(sequelize.fn('date', sequelize.col('orderDate')), '<=', req.body.endDate.toString().substring(0,10)),
                 ]
             },
         })
@@ -113,8 +113,8 @@ exports.getRepairsByDate = async (req, res) => {
             }], order: [[sequelize.literal('createdAt'), 'DESC']],
             where: {
                 [Op.and]: [
-                    sequelize.where(sequelize.fn('date', sequelize.col('repair.createdAt')), '>=', req.body.startDate),
-                    sequelize.where(sequelize.fn('date', sequelize.col('repair.createdAt')), '<=', req.body.endDate),
+                    sequelize.where(sequelize.fn('date', sequelize.col('repair.createdAt')), '>=', req.body.startDate.toString().substring(0,10)),
+                    sequelize.where(sequelize.fn('date', sequelize.col('repair.createdAt')), '<=', req.body.endDate.toString().substring(0,10)),
                 ]
                 //
                 // createdAt: {
