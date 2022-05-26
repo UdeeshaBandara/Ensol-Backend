@@ -11,6 +11,7 @@ exports.routesConfig = function (app) {
     app.post('/machine', [
         ValidationMiddleware.validJWTNeeded,
         upload.array('machinePhotos',5),
+        RequestValidationMiddleware.validate('machine'),
         MachineController.insert
     ]);
     app.get('/machine/home', [
@@ -28,6 +29,7 @@ exports.routesConfig = function (app) {
     app.put('/machine/:id', [
         ValidationMiddleware.validJWTNeeded,
         upload.array('machinePhotos',5),
+        RequestValidationMiddleware.validate('machineUpdate'),
         MachineController.patchById
     ]);
     app.delete('/machine/:id', [

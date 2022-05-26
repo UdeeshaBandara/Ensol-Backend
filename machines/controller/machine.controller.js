@@ -2,6 +2,7 @@ const e = require("express");
 const machine = require("../../models/index.models").machine;
 const orders = require("../../models/index.models").order;
 const sequelize = require("../../models/index.models").sequelize;
+const { validationResult }= require('express-validator');
 
 
 exports.insert = async (req, res) => {
@@ -11,6 +12,12 @@ exports.insert = async (req, res) => {
 
         res.status(400).send({status: false, data: "Request body should be multipart form data"});
     } else {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(422).json({ errors: errors.array() });
+            return;
+        }
 
         const savedMachine = await machine.create({
             serialNumber: req.body.serialNumber,
@@ -147,6 +154,12 @@ exports.patchById = async (req, res) => {
 
         res.status(400).send({status: false, data: "Request body should be multipart form data"});
     } else {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(422).json({ errors: errors.array() });
+            return;
+        }
+
         if (req.files.length > 0) {
             let fileUrls = [];
             for (let i = 0; i < req.files.length; i++) {
