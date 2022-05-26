@@ -7,48 +7,54 @@ const sequelize = require("../../models/index.models").sequelize;
 exports.insert = async (req, res) => {
 
 
-    const savedMachine = await machine.create({
-        serialNumber: req.body.serialNumber,
-        machineType: req.body.machineType,
-        availableQty: req.body.availableQty,
-        rentPrice: req.body.rentPrice,
-        status: req.body.status,
-        description: req.body.description
-    });
+    if (!req.is('multipart/form-data')) {
 
-    let fileUrls = [];
-    for (let i = 0; i < req.files.length; i++) {
-        await req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
+        res.status(400).send({status: false, data: "Request body should be multipart form data"});
+    } else {
 
-        const file = req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
-        let nice = await file.getSignedUrl({
-            action: 'read',
-            expires: '03-09-2491'
+        const savedMachine = await machine.create({
+            serialNumber: req.body.serialNumber,
+            machineType: req.body.machineType,
+            availableQty: req.body.availableQty,
+            rentPrice: req.body.rentPrice,
+            status: req.body.status,
+            description: req.body.description
         });
 
-        fileUrls.push(nice[0].toString());
+        let fileUrls = [];
+        for (let i = 0; i < req.files.length; i++) {
+            await req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
+
+            const file = req.app.locals.bucket.file(savedMachine.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
+            let nice = await file.getSignedUrl({
+                action: 'read',
+                expires: '03-09-2491'
+            });
+
+            fileUrls.push(nice[0].toString());
 
 
-    }
-
-    machine.update({images: JSON.stringify(fileUrls).toString()}, {
-        where: {
-            id: savedMachine.id
         }
-    }).then((result) => {
+
+        machine.update({images: JSON.stringify(fileUrls).toString()}, {
+            where: {
+                id: savedMachine.id
+            }
+        }).then((result) => {
 
 
-        if (!result[0])
+            if (!result[0])
 
-            res.status(200).send({status: false, data: "Failed to save machine details"});
-        else
-            res.status(201).send({status: true, data: "Added successfully"});
+                res.status(200).send({status: false, data: "Failed to save machine details"});
+            else
+                res.status(201).send({status: true, data: "Machine save successfully"});
 
-    }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to update machine"});
+        }).catch(err => {
+            res.status(200).send({status: false, data: "Failed to update machine"});
 
 
-    });
+        });
+    }
 
 };
 
@@ -136,44 +142,48 @@ exports.home = async (req, res) => {
 
 exports.patchById = async (req, res) => {
 
+    if (!req.is('multipart/form-data')) {
 
-    if (req.files.length > 0) {
-        let fileUrls = [];
-        for (let i = 0; i < req.files.length; i++) {
-            await req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
+        res.status(400).send({status: false, data: "Request body should be multipart form data"});
+    } else {
+        if (req.files.length > 0) {
+            let fileUrls = [];
+            for (let i = 0; i < req.files.length; i++) {
+                await req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop()).createWriteStream().end(req.files[i].buffer)
 
-            const file = req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
-            let nice = await file.getSignedUrl({
-                action: 'read',
-                expires: '03-09-2491'
-            });
+                const file = req.app.locals.bucket.file(req.params.id.toString() + '_' + i + '.' + req.files[i].originalname.split('.').pop());
+                let nice = await file.getSignedUrl({
+                    action: 'read',
+                    expires: '03-09-2491'
+                });
 
-            fileUrls.push(nice[0].toString());
+                fileUrls.push(nice[0].toString());
 
 
+            }
+            req.body.images = JSON.stringify(fileUrls).toString()
         }
-        req.body.images = JSON.stringify(fileUrls).toString()
+
+        machine.update(req.body, {
+            where: {
+                id: req.params.id,
+                status: 1
+            }
+        }).then((result) => {
+
+
+            if (!result[0])
+
+                res.status(200).send({status: false, data: "Failed to update machine details"});
+            else
+                res.status(200).send({status: true, data: "Machine Updated successfully"});
+
+        }).catch(err => {
+            res.status(200).send({status: false, data: "Failed to update machine"});
+
+
+        });
     }
-
-    machine.update(req.body, {
-        where: {
-            id: req.params.id,
-            status: 1
-        }
-    }).then((result) => {
-
-
-        if (!result[0])
-
-            res.status(200).send({status: false, data: "Failed to update machine details"});
-        else
-            res.status(200).send({status: true, data: "Update successfully"});
-
-    }).catch(err => {
-        res.status(200).send({status: false, data: "Failed to update machine"});
-
-
-    });
 
 
 };

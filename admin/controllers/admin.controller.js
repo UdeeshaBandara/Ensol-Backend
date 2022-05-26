@@ -16,9 +16,11 @@ exports.dashboardValues = async (req, res) => {
             total_machines: await machine.sum('availableQty'),
             repair_count: await repair.count({
                 col: 'id'
-            }), user_count: await user.count({
+            }),
+            user_count: await user.count({
                 col: 'id', where: {userType: "0"},
-            }), rented_machines: await orderMachines.sum('quantity', {
+            }),
+            rented_machines: await orderMachines.sum('quantity', {
                 where: {
                     contractStartDate: {[Op.lte]: moment().format('yyyy-MM-DD HH:mm:ss')},
                     contractEndDate: {[Op.gte]: moment().format('yyyy-MM-DD HH:mm:ss')}
