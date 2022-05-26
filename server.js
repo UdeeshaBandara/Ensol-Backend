@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(express.json());
-app.use(expressValidator());
+// app.use(expressValidator);
 app.locals.bucket = admin.storage().bucket();
 // db.sequelize.sync( );
 // db.sequelize.sync({alter:true});
