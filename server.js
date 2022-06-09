@@ -4,8 +4,6 @@ const db = require("./models/index.models");
 const express = require('express');
 const admin = require("firebase-admin");
 const serverKey = require('./private_key.json');
-const expressValidator = require('express-validator');
-
 admin.initializeApp({
     credential: admin.credential.cert(serverKey),
     storageBucket: config.bucket

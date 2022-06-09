@@ -25,13 +25,14 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
     }
     user.findAll({
         where: {
-            email: req.body.email
+            email: req.body.email,
+            userType : 0
         }
     }).then((result) => {
 
 
         if (!result[0]) {
-            res.status(200).send({status: false, data: 'Invalid e-mail'});
+            res.status(200).send({status: false, data: 'Invalid account'});
         } else if (!req.body.fcm) {
             res.status(200).send({status: false, data: 'Failed to login'});
         } else {
@@ -43,6 +44,41 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
                     userId: result[0].id,
                     email: result[0].email,
                     fcm: req.body.fcm,
+                    name: result[0].firstName + ' ' + result[0].lastName,
+                };
+                return next();
+            } else {
+                return res.status(200).send({status: false, data: 'Invalid password'});
+            }
+        }
+
+    });
+
+};
+
+exports.isPasswordAndAdminMatch = (req, res, next) => {
+
+    if (!req.body.email) {
+        return res.status(200).send({status: false, data: 'Invalid e-mail'});
+    }
+    user.findAll({
+        where: {
+            email: req.body.email,
+            userType : 1
+        }
+    }).then((result) => {
+
+
+        if (!result[0]) {
+            res.status(200).send({status: false, data: 'Invalid account'});
+        }  else {
+            let passwordFields = result[0].password.split('$');
+            let salt = passwordFields[0];
+            let hash = crypto.createHmac('sha512', salt).update(req.body.password).digest("base64");
+            if (hash === passwordFields[1]) {
+                req.body = {
+                    userId: result[0].id,
+                    email: result[0].email,
                     name: result[0].firstName + ' ' + result[0].lastName,
                 };
                 return next();

@@ -6,7 +6,29 @@ const orderMachines = require("../../models/index.models").orderMachines;
 const order = require("../../models/index.models").order;
 const moment = require('moment');
 const {sequelize} = require("../../models/index.models");
+const {jwt_secret: jwtSecret} = require("../../config/env.config");
+const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
+exports.login = (req, res) => {
+    try {
+        let refreshId = req.body.userId + jwtSecret;
+        let salt = crypto.randomBytes(16).toString('base64');
+        let hash = crypto.createHmac('sha512', salt).update(refreshId).digest("base64");
+        req.body.refreshKey = salt;
+        let token = jwt.sign(req.body, jwtSecret);
+        let b = Buffer.from(hash);
+        let refresh_token = b.toString('base64');
+
+
+        res.status(200).send({status: true, accessToken: token, refreshToken: refresh_token});
+
+
+
+    } catch (err) {
+        res.status(200).send({status: false, data: "Failed to login"});
+    }
+};
 
 exports.dashboardValues = async (req, res) => {
     try {
