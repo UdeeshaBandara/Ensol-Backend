@@ -6,10 +6,10 @@ module.exports = {
     "jwt_secret": "ensol",
     "jwt_expiration_in_seconds": 36000,
     "environment": "dev",
-    "HOST": "ensol.mysql.database.azure.com",
-    "USER": "udeesha",
-    "PASSWORD": "Helloworld!",
-    "DB": "ensol",
+    "HOST": "srv984.hstgr.io",
+    "USER": "u533919264_admin",
+    "PASSWORD": "Isuru321@",
+    "DB": "u533919264_admin",
     "dialect": "mysql",
 
 };
